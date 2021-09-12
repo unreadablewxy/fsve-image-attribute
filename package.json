@@ -22,7 +22,7 @@
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development --watch",
     "clean": "rm -rf build",
-    "link": "mkdir -p ~/.fs-viewer-extensions/fsve-image-attribute && ln -s $PWD/build/index.* ~/.fs-viewer-extensions/fsve-image-attribute && ln -s $PWD/package.json ~/.fs-viewer-extensions/fsve-image-attribute"
+    "link": "mkdir -p ~/.fs-viewer-extensions/fsve-image-attribute && ln -s $PWD/{build/index.*,package.json} ~/.fs-viewer-extensions/fsve-image-attribute"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
