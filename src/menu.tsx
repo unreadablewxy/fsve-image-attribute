@@ -1,17 +1,35 @@
+import "./menu.sass";
 import * as React from "react";
+import {mdiImageText} from "@mdi/js";
+import {parse as parseExif} from "exifr";
 
-import {Attribute} from "./attribute";
+import type {browsing, io} from "fs-viewer";
+
+type Property = [name: string, value: string];
+
+const Table = window.components.createTable<Property, {}>(null, [
+    {
+        label: "Name",
+        width: 10,
+        render: v => <span>{v.value[0]}</span>
+    },
+    {
+        label: "Value",
+        width: 10,
+        render: v => <span>{v.value[1]}</span>
+    },
+]);
 
 interface PreferenceMappedProps {
 }
 
 interface Props extends PreferenceMappedProps {
-    browsing: any;
-    attribute: any;
+    browsing: browsing.Service;
+    reader: io.Reader;
 }
 
 interface State {
-    attributes: any[] | null;
+    attributes: Property[];
 }
 
 export class Menu extends React.PureComponent<Props, State> {
@@ -19,12 +37,16 @@ export class Menu extends React.PureComponent<Props, State> {
         super(props);
 
         this.state = {
-            attributes: null,
+            attributes: [],
         };
+
+        this.handleFileFocus = this.handleFileFocus.bind(this);
     }
 
     componentDidMount(): void {
         this.props.browsing.on("filefocus", this.handleFileFocus);
+
+        this.handleFileFocus(this.props.browsing.focusedFile);
     }
 
     componentWillUnmount(): void {
@@ -32,35 +54,34 @@ export class Menu extends React.PureComponent<Props, State> {
     }
 
     render(): React.ReactNode {
-        return <ul className="uc-fsv-attr-editor">
-            <label>
-                {this.state.attributes
-                    ? this.state.attributes.map(
-                        a => <Attribute {...a} onSave={this.handleSave} />)
-                    : <div>Loading</div>}
-            </label>
-        </ul>;
+        return <li className="menu uc-fsv-attr-editor">
+            <Table scroll values={this.state.attributes} placeholder="Loading" />
+        </li>;
     }
 
-    handleFileFocus = async (index: number | null): Promise<void> => {
-        this.setState({attributes: null});
-        const file = this.props.browsing.files.names[index as number];
+    async handleFileFocus(index: number | null): Promise<void> {
+        this.setState({attributes: []});
+
+        const {browsing, reader} = this.props;
+        const file = browsing.files.names[index as number];
         if (file) {
-            const attributes = await this.props.attribute.getAll(file);
-            this.setState(() => this.props.browsing.focusedFile === index
+            const filePath = reader.joinPath(browsing.files.path, file);
+            const exif = await parseExif(`file://${filePath}`, true);
+            const attributes = Object.keys(exif).
+                reduce((r, k) => (r.push([k, String(exif[k])]), r), [] as Property[]);
+
+            this.setState(() => browsing.focusedFile === index
                 ? {attributes}
                 : null);
         }
-    };
-
-    handleSave = async (name: string, value: string): Promise<void> => {
-        // TODO:
-    };
+    }
 }
 
 export const Definition = {
-    id: "comparer",
+    id: "attributes",
+    icon: mdiImageText,
+    label: "Attributes",
     path: "/stage",
-    services: ["browsing", "attribute"],
+    services: ["browsing", "reader"],
     component: Menu,
 };

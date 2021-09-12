@@ -1,4 +1,4 @@
-# fs-viewer-attribute-editor
+# fsve-image-attribute
 
 Filesystem attribute editor for fs-viewer
 
@@ -18,8 +18,8 @@ npm install && npm run link
 3. Add the following property to the JSON file
 ```json
 {
-  "extensions":["fs-viewer-attribute-editor"]
+  "extensions":["fsve-image-attribute"]
 }
 ```
 
-Note: Assume pre-alpha, "it works on my box", level of quality. Unlike other extensions, this one has destructive potential. If in doubt, do not use
+Note: Assume pre-alpha, "it works on my box", level of quality.

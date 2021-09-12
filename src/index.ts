@@ -1,6 +1,6 @@
 import {Definition as MenuDefinition} from "./menu";
 
-export const namespace = "de.unreadableco.fs-viewer.attribute-editor";
+export const namespace = "fs-attribute";
 
 export const stylesheets = [
     new URL("extension://index.css"),
