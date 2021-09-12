@@ -1,7 +1,6 @@
 # fsve-image-attribute
 
-Filesystem attribute editor for fs-viewer
-
+Image attribute inspector extension for fs-viewer
 ## How to install
 
 For now there's no UI experience for managing extensions in the `fs-viewer` project. So all installations must be done manually.
