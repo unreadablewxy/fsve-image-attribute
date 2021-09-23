@@ -54,9 +54,11 @@ export class Menu extends React.PureComponent<Props, State> {
     }
 
     render(): React.ReactNode {
-        return <li className="menu uc-fsv-attr-editor">
-            <Table scroll values={this.state.attributes} placeholder="Loading" />
-        </li>;
+        return <ul className="menu uc-fsv-attr-editor">
+            <li>
+                <Table scroll values={this.state.attributes} placeholder="Loading" />
+            </li>
+        </ul>;
     }
 
     async handleFileFocus(index: number | null): Promise<void> {
